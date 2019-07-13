@@ -30,6 +30,9 @@ switch(searchParameter) {
     case "movie-this":
         movieThis();
         break;
+    case "do-what-it-says":
+        doWhatItSays();
+        break;
 }
 
 // concert function
@@ -96,4 +99,8 @@ function movieThis(){
             let movieActors = "Actors: " + response.data.Actors
             console.log(movieTitle, '\n', movieRelease, '\n', imdbRating, '\n', rottenTomatoesRating, '\n', movieCountry, '\n', movieLanguage, '\n', moviePlot, '\n', movieActors)
         })
+}
+
+function doWhatItSays(){
+    
 }
