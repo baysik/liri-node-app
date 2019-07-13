@@ -1,12 +1,15 @@
 // import dotenv;
-let dotEnv = require("dotenv").config();
+const dotEnv = require("dotenv").config();
+// spotify api key
 const keys = require("./keys");
 // import axios
-let axios = require("axios");
+const axios = require("axios");
 // import spotify
-let Spotify = require("node-spotify-api");
+const Spotify = require("node-spotify-api");
 // import moment
-let moment = require("moment");
+const moment = require("moment");
+// import fs
+const fs = require("fs");
 
 const spotify = new Spotify(keys.spotify);
 
@@ -14,6 +17,7 @@ const spotify = new Spotify(keys.spotify);
 var searchParameter = process.argv[2]
 var userInput = ""
 var concertArtist = ""
+var movieInput = ""
 
 // condition statements
 switch(searchParameter) {
@@ -43,7 +47,11 @@ function concertThis(){
         let venueCity = "City: " + response.data[0].venue.city
         let venueRegion = "State: " + response.data[0].venue.region
         // add date of event using moment to format as MM/DD/YYYY
-        console.log("Artist: " + concertArtist, '\n', venueName, '\n', venueCity, '\n', venueRegion)
+        let formatMonth = moment(response.data[0].datetime).months() + "/";
+        let formatDay = moment(response.data[0].datetime).days() + "/"
+        let formatYear = moment(response.data[0].datetime).years();
+        let formattedDate = formatMonth + formatDay + formatYear;
+        console.log("Artist: " + concertArtist, '\n', venueName, '\n', venueCity, '\n', venueRegion, '\n', formattedDate);
     })
 }
 
@@ -72,16 +80,16 @@ function movieThis(){
         for (var i=3; i < process.argv.length; i++){
             console.log(process.argv[i])
             userInput = userInput + process.argv[i];
-            concertArtist = concertArtist + " " + process.argv[i]
+            movieInput = movieInput + "_" + process.argv[i]
         }
-        var queryURL = "http://www.omdbapi.com/?t=" + userInput + "&apikey=77a62a1b"
+        var queryURL = "http://www.omdbapi.com/?t=" + movieInput + "&apikey=77a62a1b"
         axios.get(queryURL)
         .then(function(response){
             // add so if userInput is empty, default the movie search to Mr.Nobody
             let movieTitle = "Title: " + response.data.Title
             let movieRelease = "Released: " + response.data.Year
             let imdbRating = "IMDB: " +response.data.imdbRating
-            let rottenTomatoesRating = response.data.Ratings[1].Source + ": " + response.data.Ratings[1].Value
+            let rottenTomatoesRating = response.data.Ratings[0].Source + ": " + response.data.Ratings[0].Value
             let movieCountry = "Country: " + response.data.Country
             let movieLanguage = "Language: " + response.data.Language
             let moviePlot = "Plot: " + response.data.Plot
