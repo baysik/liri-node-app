@@ -13,7 +13,8 @@ The LIRI bot is a cli app that was created to streamline the process of searchin
 1. ##### Search Spotify:
     node liri.js spotify-this-song "song name".
     In this case, Haunted Gardens is the song that is searched.
-    ![Image of Spotify](https://i.imgur.com/dotDsJO.png)
+    ![Image of Spotify](https://i.imgur.com/dotDsJO.png) 
+
     In the case where no song is searched, it will default to The Sign by Ace of Base.
     ![Image of Spotify2](https://i.imgur.com/UbKYzxy.png)
 
@@ -32,6 +33,6 @@ The LIRI bot is a cli app that was created to streamline the process of searchin
 4. ##### Search Do What it Says;
     node liri.js do-what-it-says
     This will look into the random.txt file and then search spotify.
-    In this case, it will search for, I Want It That Way.
-    ![Do What it Says](https://i.imgur.com/zUNXzws.png)
+    In this case, it will search for, I Want It That Way.  
+    ![Do What it Says](https://i.imgur.com/zUNXzws.png) 
 
