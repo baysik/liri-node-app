@@ -40,7 +40,6 @@ switch(searchParameter || searchThisParameter) {
 function concertThis(){
     // iterate for every argument after the third
     for (var i=3; i < process.argv.length; i++){
-        console.log(process.argv[i])
         userInput = userInput + process.argv[i];
         concertArtist = concertArtist + " " + process.argv[i]
     }
@@ -51,11 +50,17 @@ function concertThis(){
         let venueCity = "City: " + response.data[0].venue.city
         let venueRegion = "State: " + response.data[0].venue.region
         // add date of event using moment to format as MM/DD/YYYY
-        let formatMonth = moment(response.data[0].datetime).months() + "/";
+        let formatMonth = moment(response.data[0].datetime).month() + "/";
         let formatDay = moment(response.data[0].datetime).days() + "/"
-        let formatYear = moment(response.data[0].datetime).years();
+        let formatYear = moment(response.data[0].datetime).year();
         let formattedDate = formatMonth + formatDay + formatYear;
-        console.log("Artist: " + concertArtist, '\n', venueName, '\n', venueCity, '\n', venueRegion, '\n', formattedDate);
+        let finalText = `*Concert This*\n${concertArtist}\n${venueName}\n${venueCity}\n${venueRegion}\n${formattedDate}\n---\n`
+        console.log(finalText);
+        fs.appendFile("log.txt", finalText, function(err){
+            if (err) throw err;
+            console.log("Saved!");
+
+        })
     })
 }
 
@@ -63,9 +68,8 @@ function spotifyThis(){
     // iterate for every argument after the third
     for (var i=3; i < process.argv.length; i++){
         userInput = userInput + " " + process.argv[i];
-        console.log(userInput);
     }
-    if (userInput === "" || " "){
+    if (userInput === ""){
         // if no input, search song "the sign"
         spotify.search({
             type: "track",
@@ -77,7 +81,13 @@ function spotifyThis(){
             let songName = "Title: " + response.tracks.items[0].name;
             let songLink = "Link: " + response.tracks.items[0].external_urls.spotify;
             let albumName = "Album: " + response.tracks.items[0].album.name;
-            console.log(songName, '\n', artistName, '\n', albumName, '\n', songLink)
+            let finalText = `*Spotify This Song*\n${songName}\n${artistName}\n${albumName}\n${songLink}\n---\n`
+            console.log(finalText);
+            fs.appendFile("log.txt", finalText, function(err){
+                if (err) throw err;
+                console.log("Saved!");
+
+            })
         })
     } else {
         // search parameters for spotify api
@@ -91,7 +101,13 @@ function spotifyThis(){
             let songName = "Title: " + response.tracks.items[0].name;
             let songLink = "Link: " + response.tracks.items[0].external_urls.spotify;
             let albumName = "Album: " + response.tracks.items[0].album.name;
-            console.log(songName, '\n', artistName, '\n', albumName, '\n', songLink)
+            let finalText = `*Spotify This Song*\n${songName}\n${artistName}\n${albumName}\n${songLink}\n---\n`
+            console.log(finalText);
+            fs.appendFile("log.txt", finalText, function(err){
+                if (err) throw err;
+                console.log("Saved!");
+
+            })
         })
     }
 }
@@ -99,7 +115,6 @@ function spotifyThis(){
 function movieThis(){
     // iterate for every argument after the third
     for (var i=3; i < process.argv.length; i++){
-        console.log(process.argv[i])
         userInput = userInput + process.argv[i];
         movieInput = movieInput + "_" + process.argv[i]
     }
@@ -116,7 +131,13 @@ function movieThis(){
             let movieLanguage = "Language: " + response.data.Language
             let moviePlot = "Plot: " + response.data.Plot
             let movieActors = "Actors: " + response.data.Actors
-            console.log(movieTitle, '\n', movieRelease, '\n', imdbRating, '\n', rottenTomatoesRating, '\n', movieCountry, '\n', movieLanguage, '\n', moviePlot, '\n', movieActors)
+            let finalText = `*Movie This*\n${movieTitle}\n${movieRelease}\n${imdbRating}\n${rottenTomatoesRating}\n${movieCountry}\n${movieLanguage}\n${moviePlot}\n${movieActors}\n---\n`
+            console.log(finalText);
+            fs.appendFile("log.txt", finalText, function(err){
+                if (err) throw err;
+                console.log("Saved!");
+
+            })
         })
     }else {
         var queryURL = "http://www.omdbapi.com/?t=" + movieInput + "&apikey=77a62a1b"
@@ -131,8 +152,7 @@ function movieThis(){
             let movieLanguage = "Language: " + response.data.Language
             let moviePlot = "Plot: " + response.data.Plot
             let movieActors = "Actors: " + response.data.Actors
-            console.log(movieTitle, '\n', movieRelease, '\n', imdbRating, '\n', rottenTomatoesRating, '\n', movieCountry, '\n', movieLanguage, '\n', moviePlot, '\n', movieActors)
-            let finalText = `${movieTitle}\n${movieRelease}\n${imdbRating}\n${rottenTomatoesRating}\n${movieCountry}\n${movieLanguage}\n${moviePlot}\n${movieActors}\n---\n`
+            let finalText = `*Movie This*\n${movieTitle}\n${movieRelease}\n${imdbRating}\n${rottenTomatoesRating}\n${movieCountry}\n${movieLanguage}\n${moviePlot}\n${movieActors}\n---\n`
             console.log(finalText);
             fs.appendFile("log.txt", finalText, function(err){
                 if (err) throw err;
@@ -145,10 +165,7 @@ function movieThis(){
 
 function doWhatItSays(){
     fs.readFile("random.txt", "utf8", function(error,data){
-        console.log(data);
         var dataArr = data.split(",")
-        console.log(dataArr[0]);
-        console.log(dataArr[1]);
         // set search parameter
         searchThisParameter = JSON.stringify(dataArr[0])
         // set user input
@@ -164,7 +181,13 @@ function doWhatItSays(){
             let songName = "Title: " + response.tracks.items[0].name;
             let songLink = "Link: " + response.tracks.items[0].external_urls.spotify;
             let albumName = "Album: " + response.tracks.items[0].album.name;
-            console.log(songName, '\n', artistName, '\n', albumName, '\n', songLink)
+            let finalText = `*Do What it Says*\n${songName}\n${artistName}\n${albumName}\n${songLink}\n---\n`
+            console.log(finalText);
+            fs.appendFile("log.txt", finalText, function(err){
+                if (err) throw err;
+                console.log("Saved!");
+
+            })
         })
     })
 }
