@@ -103,20 +103,44 @@ function movieThis(){
         userInput = userInput + process.argv[i];
         movieInput = movieInput + "_" + process.argv[i]
     }
-    var queryURL = "http://www.omdbapi.com/?t=" + movieInput + "&apikey=77a62a1b"
-    axios.get(queryURL)
-    .then(function(response){
-        // add so if userInput is empty, default the movie search to Mr.Nobody
-        let movieTitle = "Title: " + response.data.Title
-        let movieRelease = "Released: " + response.data.Year
-        let imdbRating = "IMDB: " +response.data.imdbRating
-        let rottenTomatoesRating = response.data.Ratings[0].Source + ": " + response.data.Ratings[0].Value
-        let movieCountry = "Country: " + response.data.Country
-        let movieLanguage = "Language: " + response.data.Language
-        let moviePlot = "Plot: " + response.data.Plot
-        let movieActors = "Actors: " + response.data.Actors
-        console.log(movieTitle, '\n', movieRelease, '\n', imdbRating, '\n', rottenTomatoesRating, '\n', movieCountry, '\n', movieLanguage, '\n', moviePlot, '\n', movieActors)
-    })
+    if (userInput === ""){
+        var queryURL = "http://www.omdbapi.com/?t=mr.nobody&apikey=77a62a1b"
+        axios.get(queryURL)
+        .then(function(response){
+            // add so if userInput is empty, default the movie search to Mr.Nobody
+            let movieTitle = "Title: " + response.data.Title
+            let movieRelease = "Released: " + response.data.Year
+            let imdbRating = "IMDB: " +response.data.imdbRating
+            let rottenTomatoesRating = response.data.Ratings[0].Source + ": " + response.data.Ratings[0].Value
+            let movieCountry = "Country: " + response.data.Country
+            let movieLanguage = "Language: " + response.data.Language
+            let moviePlot = "Plot: " + response.data.Plot
+            let movieActors = "Actors: " + response.data.Actors
+            console.log(movieTitle, '\n', movieRelease, '\n', imdbRating, '\n', rottenTomatoesRating, '\n', movieCountry, '\n', movieLanguage, '\n', moviePlot, '\n', movieActors)
+        })
+    }else {
+        var queryURL = "http://www.omdbapi.com/?t=" + movieInput + "&apikey=77a62a1b"
+        axios.get(queryURL)
+        .then(function(response){
+            // add so if userInput is empty, default the movie search to Mr.Nobody
+            let movieTitle = "Title: " + response.data.Title
+            let movieRelease = "Released: " + response.data.Year
+            let imdbRating = "IMDB: " +response.data.imdbRating
+            let rottenTomatoesRating = response.data.Ratings[0].Source + ": " + response.data.Ratings[0].Value
+            let movieCountry = "Country: " + response.data.Country
+            let movieLanguage = "Language: " + response.data.Language
+            let moviePlot = "Plot: " + response.data.Plot
+            let movieActors = "Actors: " + response.data.Actors
+            console.log(movieTitle, '\n', movieRelease, '\n', imdbRating, '\n', rottenTomatoesRating, '\n', movieCountry, '\n', movieLanguage, '\n', moviePlot, '\n', movieActors)
+            let finalText = `${movieTitle}\n${movieRelease}\n${imdbRating}\n${rottenTomatoesRating}\n${movieCountry}\n${movieLanguage}\n${moviePlot}\n${movieActors}\n---\n`
+            console.log(finalText);
+            fs.appendFile("log.txt", finalText, function(err){
+                if (err) throw err;
+                console.log("Saved!");
+
+            })
+        })
+    }
 }
 
 function doWhatItSays(){
