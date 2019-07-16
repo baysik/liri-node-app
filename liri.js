@@ -15,12 +15,13 @@ const spotify = new Spotify(keys.spotify);
 
 // console.log(spotify);
 var searchParameter = process.argv[2]
+var searchThisParameter = ""
 var userInput = ""
 var concertArtist = ""
 var movieInput = ""
 
 // condition statements
-switch(searchParameter) {
+switch(searchParameter || searchThisParameter) {
     case "concert-this":
         concertThis();
         break;
@@ -62,45 +63,84 @@ function spotifyThis(){
     // iterate for every argument after the third
     for (var i=3; i < process.argv.length; i++){
         userInput = userInput + " " + process.argv[i];
+        console.log(userInput);
     }
-    // search parameters for spotify api
-    spotify.search({
-        type: "track",
-        query: userInput,
-        limit: 1
-    })
-    .then(function(response){
-        let artistName = "Artist(s): " + response.tracks.items[0].album.artists[0].name;
-        let songName = "Title: " + response.tracks.items[0].name;
-        let songLink = "Link: " + response.tracks.items[0].external_urls.spotify;
-        let albumName = "Album: " + response.tracks.items[0].album.name;
-        console.log(songName, '\n', artistName, '\n', albumName, '\n', songLink)
-    })
+    if (userInput === "" || " "){
+        // if no input, search song "the sign"
+        spotify.search({
+            type: "track",
+            query: "The Sign Ace of Base",
+            limit: 1
+        })
+        .then(function(response){
+            let artistName = "Artist(s): " + response.tracks.items[0].album.artists[0].name;
+            let songName = "Title: " + response.tracks.items[0].name;
+            let songLink = "Link: " + response.tracks.items[0].external_urls.spotify;
+            let albumName = "Album: " + response.tracks.items[0].album.name;
+            console.log(songName, '\n', artistName, '\n', albumName, '\n', songLink)
+        })
+    } else {
+        // search parameters for spotify api
+        spotify.search({
+            type: "track",
+            query: userInput,
+            limit: 5
+        })
+        .then(function(response){
+            let artistName = "Artist(s): " + response.tracks.items[0].album.artists[0].name;
+            let songName = "Title: " + response.tracks.items[0].name;
+            let songLink = "Link: " + response.tracks.items[0].external_urls.spotify;
+            let albumName = "Album: " + response.tracks.items[0].album.name;
+            console.log(songName, '\n', artistName, '\n', albumName, '\n', songLink)
+        })
+    }
 }
 
 function movieThis(){
-        // iterate for every argument after the third
-        for (var i=3; i < process.argv.length; i++){
-            console.log(process.argv[i])
-            userInput = userInput + process.argv[i];
-            movieInput = movieInput + "_" + process.argv[i]
-        }
-        var queryURL = "http://www.omdbapi.com/?t=" + movieInput + "&apikey=77a62a1b"
-        axios.get(queryURL)
-        .then(function(response){
-            // add so if userInput is empty, default the movie search to Mr.Nobody
-            let movieTitle = "Title: " + response.data.Title
-            let movieRelease = "Released: " + response.data.Year
-            let imdbRating = "IMDB: " +response.data.imdbRating
-            let rottenTomatoesRating = response.data.Ratings[0].Source + ": " + response.data.Ratings[0].Value
-            let movieCountry = "Country: " + response.data.Country
-            let movieLanguage = "Language: " + response.data.Language
-            let moviePlot = "Plot: " + response.data.Plot
-            let movieActors = "Actors: " + response.data.Actors
-            console.log(movieTitle, '\n', movieRelease, '\n', imdbRating, '\n', rottenTomatoesRating, '\n', movieCountry, '\n', movieLanguage, '\n', moviePlot, '\n', movieActors)
-        })
+    // iterate for every argument after the third
+    for (var i=3; i < process.argv.length; i++){
+        console.log(process.argv[i])
+        userInput = userInput + process.argv[i];
+        movieInput = movieInput + "_" + process.argv[i]
+    }
+    var queryURL = "http://www.omdbapi.com/?t=" + movieInput + "&apikey=77a62a1b"
+    axios.get(queryURL)
+    .then(function(response){
+        // add so if userInput is empty, default the movie search to Mr.Nobody
+        let movieTitle = "Title: " + response.data.Title
+        let movieRelease = "Released: " + response.data.Year
+        let imdbRating = "IMDB: " +response.data.imdbRating
+        let rottenTomatoesRating = response.data.Ratings[0].Source + ": " + response.data.Ratings[0].Value
+        let movieCountry = "Country: " + response.data.Country
+        let movieLanguage = "Language: " + response.data.Language
+        let moviePlot = "Plot: " + response.data.Plot
+        let movieActors = "Actors: " + response.data.Actors
+        console.log(movieTitle, '\n', movieRelease, '\n', imdbRating, '\n', rottenTomatoesRating, '\n', movieCountry, '\n', movieLanguage, '\n', moviePlot, '\n', movieActors)
+    })
 }
 
 function doWhatItSays(){
-    
+    fs.readFile("random.txt", "utf8", function(error,data){
+        console.log(data);
+        var dataArr = data.split(",")
+        console.log(dataArr[0]);
+        console.log(dataArr[1]);
+        // set search parameter
+        searchThisParameter = JSON.stringify(dataArr[0])
+        // set user input
+        var userInput = JSON.stringify(dataArr[1]) 
+        // initialize spotify search
+        spotify.search({
+            type: "track",
+            query: userInput,
+            limit: 1
+        })
+        .then(function(response){
+            let artistName = "Artist(s): " + response.tracks.items[0].album.artists[0].name;
+            let songName = "Title: " + response.tracks.items[0].name;
+            let songLink = "Link: " + response.tracks.items[0].external_urls.spotify;
+            let albumName = "Album: " + response.tracks.items[0].album.name;
+            console.log(songName, '\n', artistName, '\n', albumName, '\n', songLink)
+        })
+    })
 }
